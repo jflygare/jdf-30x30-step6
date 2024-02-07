@@ -112,7 +112,7 @@ function ng_setup() {
     --project lib-core
 
   # Generate login component
-  npx ng generate service services/student-service \
+  npx ng generate service services/students \
     --project lib-core \
     --defaults \
     --skip-tests

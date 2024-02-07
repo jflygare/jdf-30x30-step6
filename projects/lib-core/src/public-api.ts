@@ -2,5 +2,6 @@
  * Public API Surface of lib-core
  */
 
-export * from './lib/lib-core.service';
-export * from './lib/lib-core.component';
+export * from './lib/model/course';
+export * from './lib/model/student';
+export * from './lib/services/students.service';

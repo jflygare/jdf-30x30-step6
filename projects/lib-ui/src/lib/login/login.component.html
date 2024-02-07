@@ -1,1 +1,38 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <input type="email" autocomplete="email" matInput placeholder="Email Address" formControlName="email">
+            @if (loginForm.controls['email'].hasError('required')) {
+              <mat-error>Email is <strong>required</strong></mat-error>
+            }
+            @if (loginForm.controls['email'].hasError('email')) {
+              <mat-error>Email is <strong>invalid</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <input type="password" autocomplete="current-password" matInput placeholder="Password" formControlName="password">
+            @if (loginForm.controls['password'].hasError('required')) {
+              <mat-error>Password is <strong>required</strong></mat-error>
+            }
+            @if (loginForm.controls['password'].hasError('minlength')) {
+              <mat-error>Password must be at least <strong>{{loginForm.controls['password'].getError('minlength').requiredLength}}</strong> chars</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
