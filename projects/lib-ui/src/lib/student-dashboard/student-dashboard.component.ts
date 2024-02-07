@@ -1,12 +1,15 @@
-import { Component, inject } from '@angular/core';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { StudentListComponent } from '../student-list/student-list.component';
+import { StudentDetailComponent } from '../student-detail/student-detail.component';
+import {
+  Student,
+  StudentsService,
+} from '../../../../lib-core/src/public-api';
 
 @Component({
   selector: 'lib-student-dashboard',
@@ -14,35 +17,42 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './student-dashboard.component.css',
   standalone: true,
   imports: [
-    AsyncPipe,
     MatGridListModule,
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule
-  ]
+    MatCardModule,
+    StudentListComponent,
+    StudentDetailComponent,
+  ],
 })
-export class StudentDashboardComponent {
-  private breakpointObserver = inject(BreakpointObserver);
+export class StudentDashboardComponent implements OnInit {
+  selectedStudent!: Student;
 
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Card 1', cols: 1, rows: 1 },
-          { title: 'Card 2', cols: 1, rows: 1 },
-          { title: 'Card 3', cols: 1, rows: 1 },
-          { title: 'Card 4', cols: 1, rows: 1 }
-        ];
-      }
+  constructor(private studentService: StudentsService) {}
 
-      return [
-        { title: 'Card 1', cols: 2, rows: 1 },
-        { title: 'Card 2', cols: 1, rows: 1 },
-        { title: 'Card 3', cols: 1, rows: 2 },
-        { title: 'Card 4', cols: 1, rows: 1 }
-      ];
-    })
-  );
+  ngOnInit(): void {
+    this.selectedStudent = this.studentService.newStudent();
+  }
+
+  getStudents(): Student[] {
+    return this.studentService.getStudents();
+  }
+
+  selectStudent(student: Student): void {
+    this.selectedStudent = student;
+  }
+
+  newStudent(): void {
+    this.selectedStudent = this.studentService.newStudent();
+  }
+
+  deleteStudent(student: Student): void {
+    this.studentService.deleteStudent(student);
+    if (this.selectedStudent.id === student.id) this.newStudent();
+  }
+
+  saveStudent(student: Student): void {
+    this.selectedStudent = this.studentService.saveStudent(student);
+  }
 }
